@@ -4,9 +4,9 @@ package redis;
  * Created by liuyang on 2017/4/20.
  */
 public class ThreadA extends Thread {
-    private Service service;
+    private SinglatonService service;
 
-    public ThreadA(Service service) {
+    public ThreadA(SinglatonService service) {
         this.service = service;
     }
 

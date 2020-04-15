@@ -17,7 +17,7 @@ import java.util.UUID;
   */
 
 
-public class Service {
+public class SinglatonService {
     private static JedisPool pool = null;
 
     private static final String LOCK_SUCCESS = "OK";
@@ -55,7 +55,7 @@ public class Service {
     public void seckill() {
         Jedis jedis = pool.getResource();
         String uuid = UUID.randomUUID().toString();
-        boolean result = RedisTool.tryGetDistributedLock(jedis,"liuhs_fx_lock", uuid, 5000);
+        boolean result = RedisLockTool.tryGetDistributedLock(jedis,"liuhs_fx_lock", uuid, 5000);
          //1加锁
         if (result) {
             System.out.println(Thread.currentThread().getName() + "获得了锁:"+uuid);
@@ -63,14 +63,13 @@ public class Service {
                 System.out.println("结束啦， 共有"+ren+"人参与");
                 return;
             }
-
             //2开始处理业务
             // 成功处理业务
             System.out.println("还有票："+--n+"张");
             ren++;
             System.out.println("已抢到票："+ren+"人");
             //释放锁
-            RedisTool.releaseDistributedLock(jedis,"liuhs_fx_lock",uuid);
+            RedisLockTool.releaseDistributedLock(jedis,"liuhs_fx_lock",uuid);
 
         } else {
             System.out.println(Thread.currentThread().getName() + "没有获得了锁:"+uuid);

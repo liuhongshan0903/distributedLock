@@ -7,7 +7,7 @@ import java.util.Collections;
 /**
  * redis 分布式锁工具类
  */
-public class RedisTool {
+public class RedisLockTool {
 
     private static final Long RELEASE_SUCCESS = 1L;
     private static final String LOCK_SUCCESS = "OK";
@@ -23,16 +23,12 @@ public class RedisTool {
      * @return 是否获取成功
      */
     public static boolean tryGetDistributedLock(Jedis jedis, String lockKey, String requestId, int expireTime) {
-
         String result = jedis.set(lockKey, requestId, SET_IF_NOT_EXIST, SET_WITH_EXPIRE_TIME, expireTime);
-
         if (LOCK_SUCCESS.equals(result)) {
             return true;
         }
         return false;
-
     }
-
     /**
      * 释放分布式锁
      * @param jedis Redis客户端
@@ -44,7 +40,6 @@ public class RedisTool {
 
         String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
         Object result = jedis.eval(script, Collections.singletonList(lockKey), Collections.singletonList(requestId));
-
         if (RELEASE_SUCCESS.equals(result)) {
             return true;
         }

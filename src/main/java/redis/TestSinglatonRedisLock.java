@@ -3,9 +3,9 @@ package redis;
 /**
  * Created by liuyang on 2017/4/20.
  */
-public class Test {
+public class TestSinglatonRedisLock {
     public static void main(String[] args) {
-        Service service = new Service();
+        SinglatonService service = new SinglatonService();
         for (int i = 0; i < 220; i++) {
             ThreadA threadA = new ThreadA(service);
             threadA.start();
